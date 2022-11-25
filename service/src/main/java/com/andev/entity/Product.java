@@ -31,7 +31,7 @@ import java.util.List;
 @EqualsAndHashCode(exclude = {"orders", "manufacturer"})
 @Builder
 @Entity
-public class Product {
+public class Product implements BaseEntity<Integer>{
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     private Integer id;

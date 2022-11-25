@@ -6,8 +6,6 @@ import com.andev.entity.Product;
 import com.andev.entity.Product_;
 import com.querydsl.core.types.Predicate;
 import com.querydsl.jpa.impl.JPAQuery;
-import lombok.AccessLevel;
-import lombok.NoArgsConstructor;
 import org.hibernate.Session;
 import org.hibernate.graph.GraphSemantic;
 import org.hibernate.graph.RootGraph;
@@ -21,12 +19,10 @@ import java.util.List;
 import static com.andev.entity.QManufacturer.manufacturer;
 import static com.andev.entity.QProduct.product;
 
-@NoArgsConstructor(access = AccessLevel.PRIVATE)
-public class UserDao {
-    private static final UserDao INSTANCE = new UserDao();
+public class ProductRepository extends RepositoryBase<Integer, Product> {
 
-    public static UserDao getInstance() {
-        return INSTANCE;
+    public ProductRepository(Session session) {
+        super(Product.class, session);
     }
 
     public List<Product> findProductByFilter_querydsl(Session session, ProductFilter filter) {
@@ -42,11 +38,10 @@ public class UserDao {
         RootGraph<Product> productGraph = session.createEntityGraph(Product.class);
         productGraph.addAttributeNode("manufacturer");
 
-
         return new JPAQuery<Product>(session)
                 .select(product)
                 .from(product)
-                .join(product.manufacturer, manufacturer)
+                .join(product.manufacturer,manufacturer)
                 .where(predicate)
                 .setHint(GraphSemantic.FETCH.getJpaHintName(), productGraph)
                 .fetch();
@@ -75,4 +70,5 @@ public class UserDao {
                 .setHint(GraphSemantic.FETCH.getJpaHintName(), productGraph)
                 .list();
     }
+
 }

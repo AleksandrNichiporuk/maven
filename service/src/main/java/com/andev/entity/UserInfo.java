@@ -22,7 +22,7 @@ import javax.persistence.OneToOne;
 @EqualsAndHashCode(of = "email")
 @Builder
 @Entity
-public class UserInfo {
+public class UserInfo implements BaseEntity<Integer>{
 
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)

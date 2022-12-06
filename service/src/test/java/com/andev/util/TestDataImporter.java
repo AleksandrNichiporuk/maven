@@ -3,18 +3,16 @@ package com.andev.util;
 import com.andev.entity.Manufacturer;
 import com.andev.entity.Product;
 import com.andev.entity.enums.Category;
-import lombok.Cleanup;
 import lombok.experimental.UtilityClass;
 import org.hibernate.Session;
-import org.hibernate.SessionFactory;
 
 import java.math.BigDecimal;
 
 @UtilityClass
 public class TestDataImporter {
 
-    public void importData(SessionFactory sessionFactory) {
-        @Cleanup Session session = sessionFactory.openSession();
+    public void importData(Session session) {
+        session.beginTransaction();
 
         Manufacturer apple = saveManufacturer(session, "Apple");
         Manufacturer samsung = saveManufacturer(session, "Samsung");
@@ -34,6 +32,8 @@ public class TestDataImporter {
 
         Product fridge_Serie6VitaFresh = saveProduct(session, bosch,
                 "fridge", "Serie 6 VitaFresh Plus", Category.HOME_TOOLS, BigDecimal.valueOf(2100));
+
+        session.getTransaction().commit();
     }
 
     private Manufacturer saveManufacturer(Session session, String name) {
@@ -64,4 +64,3 @@ public class TestDataImporter {
         return product;
     }
 }
-

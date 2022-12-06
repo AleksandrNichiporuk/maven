@@ -23,7 +23,7 @@ import java.util.List;
 @EqualsAndHashCode(of = "name")
 @Builder
 @Entity
-public class Manufacturer {
+public class Manufacturer implements BaseEntity<Integer> {
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     private Integer id;

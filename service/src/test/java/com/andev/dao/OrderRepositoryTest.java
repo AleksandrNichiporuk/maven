@@ -1,12 +1,13 @@
 package com.andev.dao;
 
+import com.andev.config.ApplicationConfigurationTest;
 import com.andev.entity.Order;
-import com.andev.util.HibernateTestUtil;
-import com.andev.util.ProxySession;
 import com.andev.util.TestEntity;
 import org.hibernate.Session;
-import org.hibernate.SessionFactory;
+import org.junit.jupiter.api.AfterAll;
 import org.junit.jupiter.api.Test;
+import org.junit.jupiter.api.TestInstance;
+import org.springframework.context.annotation.AnnotationConfigApplicationContext;
 
 import java.io.Serializable;
 import java.util.List;
@@ -14,10 +15,17 @@ import java.util.Optional;
 
 import static org.assertj.core.api.Assertions.assertThat;
 
+@TestInstance(TestInstance.Lifecycle.PER_CLASS)
 class OrderRepositoryTest {
-    private final SessionFactory sessionFactory = HibernateTestUtil.buildSessionFactory();
-    private final Session session = ProxySession.makeProxy(sessionFactory);
-    private final OrderRepository repository = new OrderRepository(session);
+    private final AnnotationConfigApplicationContext context = new AnnotationConfigApplicationContext(ApplicationConfigurationTest.class);
+    private final OrderRepository repository = context.getBean(OrderRepository.class);
+
+    private final Session session = context.getBean(Session.class);
+
+    @AfterAll
+    void closeContext() {
+        context.close();
+    }
 
     @Test
     void whenSaveThenReturnEntity() {

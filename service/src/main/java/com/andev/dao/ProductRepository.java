@@ -9,6 +9,7 @@ import com.querydsl.jpa.impl.JPAQuery;
 import org.hibernate.Session;
 import org.hibernate.graph.GraphSemantic;
 import org.hibernate.graph.RootGraph;
+import org.springframework.stereotype.Repository;
 
 import javax.persistence.criteria.CriteriaBuilder;
 import javax.persistence.criteria.CriteriaQuery;
@@ -19,6 +20,7 @@ import java.util.List;
 import static com.andev.entity.QManufacturer.manufacturer;
 import static com.andev.entity.QProduct.product;
 
+@Repository
 public class ProductRepository extends RepositoryBase<Integer, Product> {
 
     public ProductRepository(Session session) {
@@ -41,7 +43,7 @@ public class ProductRepository extends RepositoryBase<Integer, Product> {
         return new JPAQuery<Product>(session)
                 .select(product)
                 .from(product)
-                .join(product.manufacturer,manufacturer)
+                .join(product.manufacturer, manufacturer)
                 .where(predicate)
                 .setHint(GraphSemantic.FETCH.getJpaHintName(), productGraph)
                 .fetch();

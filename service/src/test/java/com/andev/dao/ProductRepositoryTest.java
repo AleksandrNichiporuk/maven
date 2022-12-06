@@ -1,18 +1,18 @@
 package com.andev.dao;
 
+import com.andev.config.ApplicationConfigurationTest;
 import com.andev.dto.ProductFilter;
 import com.andev.entity.Product;
 import com.andev.entity.enums.Category;
-import com.andev.util.HibernateTestUtil;
-import com.andev.util.ProxySession;
 import com.andev.util.TestDataImporter;
 import com.andev.util.TestEntity;
 import org.hibernate.Session;
-import org.hibernate.SessionFactory;
+import org.junit.jupiter.api.AfterAll;
 import org.junit.jupiter.api.Assertions;
 import org.junit.jupiter.api.BeforeAll;
 import org.junit.jupiter.api.Test;
 import org.junit.jupiter.api.TestInstance;
+import org.springframework.context.annotation.AnnotationConfigApplicationContext;
 
 import java.io.Serializable;
 import java.math.BigDecimal;
@@ -24,13 +24,19 @@ import static org.assertj.core.api.Assertions.assertThat;
 
 @TestInstance(TestInstance.Lifecycle.PER_CLASS)
 class ProductRepositoryTest {
-    private final SessionFactory sessionFactory = HibernateTestUtil.buildSessionFactory();
-    private final Session session = ProxySession.makeProxy(sessionFactory);
-    private final ProductRepository repository = new ProductRepository(session);
+    private final AnnotationConfigApplicationContext context = new AnnotationConfigApplicationContext(ApplicationConfigurationTest.class);
+    private final ProductRepository repository = context.getBean(ProductRepository.class);
+
+    private final Session session = context.getBean(Session.class);
 
     @BeforeAll
     void initDb() {
         TestDataImporter.importData(session);
+    }
+
+    @AfterAll
+    void closeContext() {
+        context.close();
     }
 
     @Test
